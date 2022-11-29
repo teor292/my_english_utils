@@ -11,13 +11,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Boost)
 
-set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-)
+file(GLOB PROJECT_SOURCES
+    cereal/*.hpp
+    cereal/archives/*.hpp
+    cereal/types/*.hpp
+    *.cpp
+    *.h
+    mainwindow.ui)
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(gui_util
@@ -42,6 +45,9 @@ else()
     endif()
 endif()
 
+target_include_directories(gui_util PRIVATE
+    "."
+    ${Boost_INCLUDE_DIRS})
 target_link_libraries(gui_util PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(gui_util PROPERTIES
