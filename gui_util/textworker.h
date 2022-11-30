@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <vector>
+#include "DictionaryList.h"
 
 class TextWorker
 {
@@ -22,6 +23,12 @@ private:
 
     static void sort_not_known(std::vector<std::string>& not_known_words,
                                const std::vector<std::string>& not_sorted_words );
+
+    static void write_not_known(const std::vector<std::string> &not_known,
+                                std::string filename);
+
+    static void add_not_known_to_dict(const std::vector<std::string> &not_known,
+                                           DictionaryList &dictionary);
 
 
 };

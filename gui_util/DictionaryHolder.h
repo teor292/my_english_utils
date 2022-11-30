@@ -7,6 +7,7 @@ class DictionaryHolder
 {
 public:
 
+    static const char* GetDirPath();
     static size_t Load();
     static void Save();
 

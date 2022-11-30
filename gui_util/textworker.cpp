@@ -3,6 +3,9 @@
 #include "boost/algorithm/string.hpp"
 #include "text_utils.h"
 #include "DictionaryHolder.h"
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 size_t TextWorker::Work(std::string path_to_file)
 {
@@ -20,11 +23,36 @@ size_t TextWorker::Work(std::string path_to_file)
 
     sort_not_known(not_known_words, not_sorted_words);
 
-    write_not_known(not_known_words, "not_known.txt");
+    fs::path pth{DictionaryHolder::GetDirPath()};
+    pth /= "not_known.txt";
+
+    write_not_known(not_known_words, pth.string());
 
     add_not_known_to_dict(not_known_words, dictionary);
 
+    DictionaryHolder::Save();
 
+    return not_known_words.size();
+}
+
+void TextWorker::add_not_known_to_dict(const std::vector<std::string> &not_known,
+                                       DictionaryList &dictionary)
+{
+    for (auto& word : not_known)
+    {
+        dictionary.words.emplace(word);
+    }
+}
+
+void TextWorker::write_not_known(const std::vector<std::string> &not_known, std::string filename)
+{
+    std::ofstream f(filename);
+    if (!f.is_open()) throw std::logic_error("Can't open file");
+
+    for (auto & word : not_known)
+    {
+        f << word << "\n";
+    }
 }
 
 void TextWorker::sort_not_known(std::vector<std::string>& not_known_words,
