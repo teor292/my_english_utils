@@ -12,6 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Boost)
+find_package(fmt)
+find_package(spdlog)
 
 file(GLOB PROJECT_SOURCES
     cereal/*.hpp
@@ -47,8 +49,13 @@ endif()
 
 target_include_directories(gui_util PRIVATE
     "."
-    ${Boost_INCLUDE_DIRS})
-target_link_libraries(gui_util PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+    ${Boost_INCLUDE_DIRS}
+    ${fmt_INCLUDE_DIRS}
+    ${spdlog_INCLUDE_DIRS}
+)
+
+
+target_link_libraries(gui_util PRIVATE Qt${QT_VERSION_MAJOR}::Widgets fmt spdlog)
 
 set_target_properties(gui_util PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
