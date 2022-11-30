@@ -20,6 +20,9 @@ private:
                           std::set<std::string> &set,
                           std::vector<std::string> &not_sorted_words);
 
+    static void sort_not_known(std::vector<std::string>& not_known_words,
+                               const std::vector<std::string>& not_sorted_words );
+
 
 };
 

@@ -1,6 +1,7 @@
 #include "DictionaryHolder.h"
 #include <fstream>
 #include <filesystem>
+#include "utils_file.h"
 
 namespace fs = std::filesystem;
 

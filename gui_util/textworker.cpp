@@ -24,7 +24,37 @@ size_t TextWorker::Work(std::string path_to_file)
 
     add_not_known_to_dict(not_known_words, dictionary);
 
-    save_dictionary(dictionary, DICTIONARY);
+
+}
+
+void TextWorker::sort_not_known(std::vector<std::string>& not_known_words,
+                                const std::vector<std::string>& not_sorted_words )
+{
+    std::vector<std::pair<std::string, int>> index_array(not_known_words.size());
+    int i = 0;
+    for (auto &word : not_known_words)
+    {
+        auto it = std::find_if(not_sorted_words.begin(), not_sorted_words.end(), [&word](const std::string &w) -> bool
+        {
+            return word == w;
+        });
+        if (it == not_known_words.end()) throw std::logic_error("Can't find word while sorting");
+        auto pos = std::distance(not_sorted_words.begin(), it);
+        index_array[i++] = std::pair<std::string, int>(word, pos);
+    }
+
+    std::sort(index_array.begin(), index_array.end(), [](const std::pair<std::string, int>& first,
+              const std::pair<std::string, int>& second) -> bool
+    {
+        return first.second < second.second;
+    });
+
+    not_known_words.clear();
+
+    for (auto &pr : index_array)
+    {
+        not_known_words.push_back(pr.first);
+    }
 }
 
 
