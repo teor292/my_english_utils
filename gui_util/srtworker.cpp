@@ -3,6 +3,7 @@
 #include "boost/algorithm/string.hpp"
 #include <filesystem>
 #include "textworker.h"
+#include "globlogger.h"
 
 namespace fs = std::filesystem;
 
@@ -23,6 +24,10 @@ size_t SrtWorker::Work(std::string path_to_file)
 
     std::error_code ec;
     fs::create_directories(BASE_DIR, ec);
+    if (ec)
+    {
+        LOGE("Failed create directory {} with code {}", BASE_DIR, ec.value());
+    }
 
     write_all_text_(pth.string(), list);
 
@@ -32,7 +37,9 @@ size_t SrtWorker::Work(std::string path_to_file)
 void SrtWorker::write_all_text_(const std::string& filename, const std::list<std::string> &phrases)
 {
     std::ofstream f(filename);
-    if (!f.is_open()) throw std::logic_error("Can't open file");
+    if (!f.is_open())
+        throw std::logic_error(
+                fmt::format("Failed open file {}", filename));
 
     for (auto& str : phrases)
     {
@@ -54,7 +61,9 @@ void SrtWorker::remove_tags_(std::list<std::string>& list)
 std::list<std::string> SrtWorker::read_all_text_(const std::string& filename)
 {
     std::ifstream f(filename, std::ios::in);
-    if (!f.is_open()) throw std::logic_error("Can't open file");
+    if (!f.is_open())
+        throw std::logic_error(
+                fmt::format("Failed open file {}", filename));
 
     std::list<std::string> result;
     std::string line;

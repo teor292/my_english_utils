@@ -6,6 +6,7 @@
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
 #include <fstream>
+#include "globlogger.h"
 
 namespace fs = std::filesystem;
 
@@ -17,7 +18,9 @@ inline bool copy_file(const std::string& src, const std::string& dst)
         return true;
     }
     catch (const std::exception& e)
-    {}
+    {
+        LOGE("Failed copy {} to {} with message {}", src, dst, e.what());
+    }
     return false;
 }
 
@@ -29,7 +32,7 @@ inline void delete_file(const std::string& src)
     }
     catch (const std::exception& e)
     {
-
+        LOGE("Failed remove {} with message {}", src, e.what());
     }
 }
 
@@ -41,16 +44,27 @@ bool restore_data(const std::string& src, const std::string& src_bak, T& result)
 
     try
     {
-       std::ifstream f{src};
-       cereal::JSONInputArchive ar(f);
-       ar(result);
+       if (fs::exists(src))
+       {
+           std::ifstream f{src};
+           cereal::JSONInputArchive ar(f);
+           ar(result);
 
-       return true;
-    }  catch (const std::exception &)
+           LOGD("Read {} success", src);
+           return true;
+       }
+       LOGD("File {} doesn't exist", src);
+
+    }  catch (const std::exception &e)
     {
+        LOGE("Failed restore from {} with message {}", src, e.what());
     }
 
-    if (!fs::exists(src_bak)) return false;
+    if (!fs::exists(src_bak))
+    {
+        LOGD("File {} doesn't exist", src_bak);
+        return false;
+    }
 
 
 
@@ -59,10 +73,11 @@ bool restore_data(const std::string& src, const std::string& src_bak, T& result)
         std::ifstream f_bak{src_bak};
         cereal::JSONInputArchive ar(f_bak);
         ar(result);
-
+        LOGD("Read {} success", src_bak);
     }
     catch (const std::exception& e)
     {
+        LOGE("Failed restore from {} with message {}", src, e.what());
         return false;
     }
 
@@ -70,6 +85,7 @@ bool restore_data(const std::string& src, const std::string& src_bak, T& result)
     {
         delete_file(src_bak);
     }
+
 
     return true;
 }
@@ -86,9 +102,12 @@ void save_data(const std::string& src, const std::string& src_bak, T& data)
         ar(data);
 
         delete_file(src_bak);
+
+        LOGD("Save data to {} successfully", src);
     }
     catch (const std::exception& e)
     {
+        LOGE("Failed save(alg) with files {} {}, message: {}", src, src_bak, e.what());
     }
 
 

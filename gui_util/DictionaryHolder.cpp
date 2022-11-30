@@ -33,8 +33,12 @@ void DictionaryHolder::Save()
 {
     fs::path pth{BASE_DIR};
 
-    std::error_code ed;
-    fs::create_directories(pth, ed);
+    std::error_code ec;
+    fs::create_directories(pth, ec);
+    if (ec)
+    {
+      LOGE("Failed create directory {} with code {}", pth.string(), ec.value());
+    }
 
     fs::path src = pth / DICTIONARY;
     fs::path src_bak = pth / DICTIONARY_BAK;

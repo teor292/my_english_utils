@@ -25,7 +25,7 @@ private:
                                const std::vector<std::string>& not_sorted_words );
 
     static void write_not_known(const std::vector<std::string> &not_known,
-                                std::string filename);
+                                const std::string& filename);
 
     static void add_not_known_to_dict(const std::vector<std::string> &not_known,
                                            DictionaryList &dictionary);

@@ -5,6 +5,8 @@
 #include <filesystem>
 #include "textworker.h"
 #include "srtworker.h"
+#include "globlogger.h"
+#include <QMessageBox>
 
 namespace fs = std::filesystem;
 
@@ -16,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     auto count = DictionaryHolder::Load();
+
+    LOGD("Count of words in dictionary: {}", count);
 
     ui->lbWordsCount->setText(QString::number(count));
 
@@ -40,28 +44,43 @@ void MainWindow::on_btOpen_clicked()
     auto files = dialog.selectedFiles();
     auto file = files[0];
 
+    LOGD("Select file: {}", file.toStdString());
+
     fs::path pth{file.toStdString()};
     auto ext = pth.extension();
-    if (ext == ".txt")
+    try
     {
-        auto new_count = TextWorker::Work(pth.string());
-        ui->lbNewCount->setText(QString::number(new_count));
-        ui->lbWordsCount->setText(QString::number(DictionaryHolder::GetData().words.size()));
+        if (ext == ".txt")
+        {
+            auto new_count = TextWorker::Work(pth.string());
+            show_new_data_(new_count);
+        }
+        else if (ext == ".srt")
+        {
+            auto new_count = SrtWorker::Work(pth.string());
+            show_new_data_(new_count);
+        }
+        else
+        {
+            LOGW("Unknown extension: {}", ext.string());
+        }
     }
-    else if (ext == ".srt")
+    catch (const std::exception &e)
     {
-        auto new_count = SrtWorker::Work(pth.string());
-        ui->lbNewCount->setText(QString::number(new_count));
-        ui->lbWordsCount->setText(QString::number(DictionaryHolder::GetData().words.size()));
+        LOGE("Exception in working process: {}", e.what());
+        QMessageBox box{QMessageBox::Icon::Critical,
+                       "Error",
+                       "Error while working, see log for description",
+                       QMessageBox::StandardButton::Ok,
+                       this};
+        box.exec();
     }
-    else
-    {
-        //TODO log
-    }
-
-
-
-
 
 }
+
+ void MainWindow::show_new_data_(size_t count_new)
+ {
+    ui->lbNewCount->setText(QString::number(count_new));
+    ui->lbWordsCount->setText(QString::number(DictionaryHolder::GetData().words.size()));
+ }
 

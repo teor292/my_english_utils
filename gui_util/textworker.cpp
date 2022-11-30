@@ -4,6 +4,8 @@
 #include "text_utils.h"
 #include "DictionaryHolder.h"
 #include <filesystem>
+#include "fmt/format.h"
+#include "globlogger.h"
 
 namespace fs = std::filesystem;
 
@@ -28,6 +30,12 @@ size_t TextWorker::Work(std::string path_to_file)
 
     std::error_code ec;
     fs::create_directories(DictionaryHolder::GetDirPath(), ec);
+    if (ec)
+    {
+        LOGE("Failed create directory {} with code {}",
+             DictionaryHolder::GetDirPath(),
+             ec.value());
+    }
 
     write_not_known(not_known_words, pth.string());
 
@@ -47,10 +55,13 @@ void TextWorker::add_not_known_to_dict(const std::vector<std::string> &not_known
     }
 }
 
-void TextWorker::write_not_known(const std::vector<std::string> &not_known, std::string filename)
+void TextWorker::write_not_known(const std::vector<std::string> &not_known,
+                                 const std::string& filename)
 {
     std::ofstream f(filename);
-    if (!f.is_open()) throw std::logic_error("Can't open file");
+    if (!f.is_open())
+        throw std::logic_error(
+                fmt::format("Failed open file {}", filename));
 
     for (auto & word : not_known)
     {
@@ -69,7 +80,9 @@ void TextWorker::sort_not_known(std::vector<std::string>& not_known_words,
         {
             return word == w;
         });
-        if (it == not_known_words.end()) throw std::logic_error("Can't find word while sorting");
+        if (it == not_known_words.end())
+            throw std::logic_error(
+                    fmt::format("Failed find word while sorting: {}", word));
         auto pos = std::distance(not_sorted_words.begin(), it);
         index_array[i++] = std::pair<std::string, int>(word, pos);
     }
@@ -94,7 +107,8 @@ std::set<std::string> TextWorker::read_words_(const std::string& filename,
 {
     std::ifstream f(filename, std::ios::in);
     if (!f.is_open())
-        throw std::logic_error("Can't open file");
+        throw std::logic_error(
+                fmt::format("Failed open file {}", filename));
 
     std::string line;
 

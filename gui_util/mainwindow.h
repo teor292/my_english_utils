@@ -20,5 +20,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    void show_new_data_(size_t count_new);
 };
 #endif // MAINWINDOW_H
