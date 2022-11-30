@@ -26,6 +26,9 @@ size_t TextWorker::Work(std::string path_to_file)
     fs::path pth{DictionaryHolder::GetDirPath()};
     pth /= "not_known.txt";
 
+    std::error_code ec;
+    fs::create_directories(DictionaryHolder::GetDirPath(), ec);
+
     write_not_known(not_known_words, pth.string());
 
     add_not_known_to_dict(not_known_words, dictionary);
