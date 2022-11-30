@@ -4,6 +4,7 @@
 #include "DictionaryHolder.h"
 #include <filesystem>
 #include "textworker.h"
+#include "srtworker.h"
 
 namespace fs = std::filesystem;
 
@@ -28,7 +29,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_btOpen_clicked()
 {
-    const QStringList filters({"Subtitles (*.src)",
+    const QStringList filters({"Subtitles (*.srt)",
                                "Text files (*.txt)",
                               });
     QFileDialog dialog{this, "Choose src/txt file"};
@@ -36,7 +37,8 @@ void MainWindow::on_btOpen_clicked()
     dialog.setFileMode(QFileDialog::FileMode::ExistingFile);
     if (!dialog.exec()) return;
 
-    auto file = dialog.selectedFiles()[0];
+    auto files = dialog.selectedFiles();
+    auto file = files[0];
 
     fs::path pth{file.toStdString()};
     auto ext = pth.extension();
@@ -45,6 +47,16 @@ void MainWindow::on_btOpen_clicked()
         auto new_count = TextWorker::Work(pth.string());
         ui->lbNewCount->setText(QString::number(new_count));
         ui->lbWordsCount->setText(QString::number(DictionaryHolder::GetData().words.size()));
+    }
+    else if (ext == ".srt")
+    {
+        auto new_count = SrtWorker::Work(pth.string());
+        ui->lbNewCount->setText(QString::number(new_count));
+        ui->lbWordsCount->setText(QString::number(DictionaryHolder::GetData().words.size()));
+    }
+    else
+    {
+        //TODO log
     }
 
 
