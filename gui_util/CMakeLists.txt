@@ -54,7 +54,7 @@ target_include_directories(gui_util PRIVATE
     ${spdlog_INCLUDE_DIRS}
 )
 
-
+target_compile_definitions(gui_util PRIVATE SPDLOG_FMT_EXTERNAL)
 target_link_libraries(gui_util PRIVATE Qt${QT_VERSION_MAJOR}::Widgets fmt spdlog)
 
 set_target_properties(gui_util PROPERTIES

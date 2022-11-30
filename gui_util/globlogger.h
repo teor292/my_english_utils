@@ -11,8 +11,13 @@ public:
 
     inline static std::shared_ptr<spdlog::logger> GetLogger()
     {
-        return _logger;
+        return logger_;
     }
+
+private:
+
+    inline static std::shared_ptr<spdlog::logger> logger_;
+
 };
 
 #endif // GLOBLOGGER_H
