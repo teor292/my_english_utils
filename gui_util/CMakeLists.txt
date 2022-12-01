@@ -23,11 +23,21 @@ file(GLOB PROJECT_SOURCES
     *.h
     mainwindow.ui)
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    enable_language("RC")
+    set (WIN32_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/windows/resources.rc)
+else()
+
+    set(WIN32_RESOURCES "")
+
+endif()
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(gui_util
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        ${WIN32_RESOURCES}
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET gui_util APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -56,6 +66,8 @@ target_include_directories(gui_util PRIVATE
 
 target_compile_definitions(gui_util PRIVATE SPDLOG_FMT_EXTERNAL SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 target_link_libraries(gui_util PRIVATE Qt${QT_VERSION_MAJOR}::Widgets fmt::fmt spdlog::spdlog)
+
+
 
 set_target_properties(gui_util PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
