@@ -46,7 +46,7 @@ void MainWindow::on_btOpen_clicked()
 
     LOGD("Select file: {}", file.toStdString());
 
-    fs::path pth{file.toStdString()};
+    fs::path pth{file.toStdWString()};
     auto ext = pth.extension();
     try
     {
@@ -57,7 +57,7 @@ void MainWindow::on_btOpen_clicked()
         }
         else if (ext == ".srt")
         {
-            auto new_count = SrtWorker::Work(pth.string());
+            auto new_count = SrtWorker::Work(pth.wstring());
             show_new_data_(new_count);
         }
         else

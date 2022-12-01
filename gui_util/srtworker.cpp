@@ -1,4 +1,5 @@
 #include "srtworker.h"
+#include "fmt/xchar.h"
 #include <fstream>
 #include "boost/algorithm/string.hpp"
 #include <filesystem>
@@ -14,7 +15,7 @@ namespace
     const auto SUBS = "subs.txt";
 }
 
-size_t SrtWorker::Work(std::string path_to_file)
+size_t SrtWorker::Work(std::wstring path_to_file)
 {
     auto list = read_all_text_(path_to_file);
     remove_tags_(list);
@@ -29,17 +30,17 @@ size_t SrtWorker::Work(std::string path_to_file)
         LOGE("Failed create directory {} with code {}", BASE_DIR, ec.value());
     }
 
-    write_all_text_(pth.string(), list);
+    write_all_text_(pth.wstring(), list);
 
     return TextWorker::Work(pth.string());
 }
 
-void SrtWorker::write_all_text_(const std::string& filename, const std::list<std::string> &phrases)
+void SrtWorker::write_all_text_(const std::wstring& filename, const std::list<std::string> &phrases)
 {
     std::ofstream f(filename);
     if (!f.is_open())
         throw std::logic_error(
-                fmt::format("Failed open file {}", filename));
+                fmt::format(L"Failed open file {}", filename));
 
     for (auto& str : phrases)
     {
@@ -58,7 +59,7 @@ void SrtWorker::remove_tags_(std::list<std::string>& list)
 }
 
 
-std::list<std::string> SrtWorker::read_all_text_(const std::string& filename)
+std::list<std::string> SrtWorker::read_all_text_(const std::wstring& filename)
 {
     std::ifstream f(filename, std::ios::in);
     if (!f.is_open())
