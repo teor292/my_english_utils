@@ -5,6 +5,7 @@
 #include <filesystem>
 #include "textworker.h"
 #include "globlogger.h"
+#include "wlogic_error.h"
 
 namespace fs = std::filesystem;
 
@@ -39,8 +40,11 @@ void SrtWorker::write_all_text_(const std::wstring& filename, const std::list<st
 {
     std::ofstream f(filename);
     if (!f.is_open())
-        throw std::logic_error(
-                fmt::format(L"Failed open file {}", filename));
+    {
+        throw std::logic_error("fuck");
+    }
+//        throw std::logic_error(
+//                fmt::format(L"Failed open file {}", filename));
 
     for (auto& str : phrases)
     {
@@ -63,8 +67,9 @@ std::list<std::string> SrtWorker::read_all_text_(const std::wstring& filename)
 {
     std::ifstream f(filename, std::ios::in);
     if (!f.is_open())
-        throw std::logic_error(
-                fmt::format("Failed open file {}", filename));
+        throw std::logic_error("fuck");
+//        throw std::logic_error(
+//                fmt::format("Failed open file {}", filename));
 
     std::list<std::string> result;
     std::string line;
