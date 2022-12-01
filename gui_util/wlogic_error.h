@@ -3,31 +3,29 @@
 
 
 #include <stdexcept>
+#include <codecvt>
+
+inline std::string convert(const std::wstring& str)
+{
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    return converter.to_bytes(str);
+}
 
 
-class wlogic_error : public std::exception
+class wlogic_error : public std::logic_error
 {
 public:
 
     explicit wlogic_error(std::wstring str)
-        : message_{std::move(str)}
-    {}
-
-
-
-    const std::wstring& GetMessage() const
+        : std::logic_error{convert(str)}
     {
-        return message_;
     }
 
-    const char* what() const override
-    {
 
-    }
 
 private:
 
-    std::wstring message_;
+    std::string message_;
 
 };
 
