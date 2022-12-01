@@ -74,19 +74,21 @@ void TextWorker::write_not_known(const std::vector<std::string> &not_known,
 void TextWorker::sort_not_known(std::vector<std::string>& not_known_words,
                                 const std::vector<std::string>& not_sorted_words )
 {
-    std::vector<std::pair<std::string, size_t>> index_array(not_known_words.size());
-    int i = 0;
+    std::vector<std::pair<std::string, size_t>> index_array;
+    index_array.reserve(not_known_words.size());
+
+
     for (auto &word : not_known_words)
     {
         auto it = std::find_if(not_sorted_words.begin(), not_sorted_words.end(), [&word](const std::string &w) -> bool
         {
             return word == w;
         });
-        if (it == not_known_words.end())
+        if (it == not_sorted_words.end())
             throw std::logic_error(
                     fmt::format("Failed find word while sorting: {}", word));
         auto pos = std::distance(not_sorted_words.begin(), it);
-        index_array[i++] = std::pair<std::string, size_t>(word, pos);
+        index_array.push_back(std::pair<std::string, size_t>(word, pos));
     }
 
     std::sort(index_array.begin(), index_array.end(), [](const std::pair<std::string, size_t>& first,
