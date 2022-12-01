@@ -20,6 +20,11 @@ public:
         return message_;
     }
 
+    const char* what() const override
+    {
+
+    }
+
 private:
 
     std::wstring message_;

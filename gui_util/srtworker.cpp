@@ -33,7 +33,7 @@ size_t SrtWorker::Work(std::wstring path_to_file)
 
     write_all_text_(pth.wstring(), list);
 
-    return TextWorker::Work(pth.string());
+    return TextWorker::Work(pth.wstring());
 }
 
 void SrtWorker::write_all_text_(const std::wstring& filename, const std::list<std::string> &phrases)

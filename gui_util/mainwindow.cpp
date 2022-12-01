@@ -7,6 +7,7 @@
 #include "srtworker.h"
 #include "globlogger.h"
 #include <QMessageBox>
+#include "wlogic_error.h"
 
 namespace fs = std::filesystem;
 
@@ -52,7 +53,7 @@ void MainWindow::on_btOpen_clicked()
     {
         if (ext == ".txt")
         {
-            auto new_count = TextWorker::Work(pth.string());
+            auto new_count = TextWorker::Work(pth.wstring());
             show_new_data_(new_count);
         }
         else if (ext == ".srt")

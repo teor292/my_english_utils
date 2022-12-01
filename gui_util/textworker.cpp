@@ -7,6 +7,7 @@
 #include "fmt/format.h"
 #include "globlogger.h"
 #include "wlogic_error.h"
+#include "fmt/xchar.h"
 
 namespace fs = std::filesystem;
 
@@ -38,7 +39,7 @@ size_t TextWorker::Work(std::wstring path_to_file)
              ec.value());
     }
 
-    write_not_known(not_known_words, pth.string());
+    write_not_known(not_known_words, pth.wstring());
 
     add_not_known_to_dict(not_known_words, dictionary);
 
@@ -61,8 +62,8 @@ void TextWorker::write_not_known(const std::vector<std::string> &not_known,
 {
     std::ofstream f(filename);
     if (!f.is_open())
-        throw std::logic_error(
-                fmt::format("Failed open file {}", filename));
+        throw wlogic_error(
+                fmt::format(L"Failed open file {}", filename));
 
     for (auto & word : not_known)
     {
@@ -103,13 +104,13 @@ void TextWorker::sort_not_known(std::vector<std::string>& not_known_words,
 }
 
 
-std::set<std::string> TextWorker::read_words_(const std::string& filename,
+std::set<std::string> TextWorker::read_words_(const std::wstring& filename,
                                   std::vector<std::string> &not_sorted_words)
 {
     std::ifstream f(filename, std::ios::in);
     if (!f.is_open())
-        throw std::logic_error(
-                fmt::format("Failed open file {}", filename));
+        throw wlogic_error(
+                fmt::format(L"Failed open file {}", filename));
 
     std::string line;
 
