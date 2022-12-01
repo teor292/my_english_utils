@@ -10,11 +10,11 @@ class TextWorker
 {
 public:
 
-    static size_t Work(std::string path_to_file);
+    static size_t Work(std::wstring path_to_file);
 
 private:
 
-    static std::set<std::string> read_words_(const std::string& filename,
+    static std::set<std::string> read_words_(const std::wstring& filename,
                                       std::vector<std::string> &not_sorted_words);
 
     static void add_words_to_set(const std::vector<std::string>& words,
@@ -25,7 +25,7 @@ private:
                                const std::vector<std::string>& not_sorted_words );
 
     static void write_not_known(const std::vector<std::string> &not_known,
-                                const std::string& filename);
+                                const std::wstring& filename);
 
     static void add_not_known_to_dict(const std::vector<std::string> &not_known,
                                            DictionaryList &dictionary);

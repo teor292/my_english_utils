@@ -6,10 +6,11 @@
 #include <filesystem>
 #include "fmt/format.h"
 #include "globlogger.h"
+#include "wlogic_error.h"
 
 namespace fs = std::filesystem;
 
-size_t TextWorker::Work(std::string path_to_file)
+size_t TextWorker::Work(std::wstring path_to_file)
 {
     std::vector<std::string> not_sorted_words;
     auto set = read_words_(path_to_file, not_sorted_words);
@@ -56,7 +57,7 @@ void TextWorker::add_not_known_to_dict(const std::vector<std::string> &not_known
 }
 
 void TextWorker::write_not_known(const std::vector<std::string> &not_known,
-                                 const std::string& filename)
+                                 const std::wstring& filename)
 {
     std::ofstream f(filename);
     if (!f.is_open())
