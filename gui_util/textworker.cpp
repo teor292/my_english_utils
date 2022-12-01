@@ -72,7 +72,7 @@ void TextWorker::write_not_known(const std::vector<std::string> &not_known,
 void TextWorker::sort_not_known(std::vector<std::string>& not_known_words,
                                 const std::vector<std::string>& not_sorted_words )
 {
-    std::vector<std::pair<std::string, int>> index_array(not_known_words.size());
+    std::vector<std::pair<std::string, size_t>> index_array(not_known_words.size());
     int i = 0;
     for (auto &word : not_known_words)
     {
@@ -84,11 +84,11 @@ void TextWorker::sort_not_known(std::vector<std::string>& not_known_words,
             throw std::logic_error(
                     fmt::format("Failed find word while sorting: {}", word));
         auto pos = std::distance(not_sorted_words.begin(), it);
-        index_array[i++] = std::pair<std::string, int>(word, pos);
+        index_array[i++] = std::pair<std::string, size_t>(word, pos);
     }
 
-    std::sort(index_array.begin(), index_array.end(), [](const std::pair<std::string, int>& first,
-              const std::pair<std::string, int>& second) -> bool
+    std::sort(index_array.begin(), index_array.end(), [](const std::pair<std::string, size_t>& first,
+              const std::pair<std::string, size_t>& second) -> bool
     {
         return first.second < second.second;
     });

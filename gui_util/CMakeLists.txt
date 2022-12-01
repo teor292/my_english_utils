@@ -55,7 +55,7 @@ target_include_directories(gui_util PRIVATE
 )
 
 target_compile_definitions(gui_util PRIVATE SPDLOG_FMT_EXTERNAL SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
-target_link_libraries(gui_util PRIVATE Qt${QT_VERSION_MAJOR}::Widgets fmt spdlog)
+target_link_libraries(gui_util PRIVATE Qt${QT_VERSION_MAJOR}::Widgets fmt::fmt spdlog::spdlog)
 
 set_target_properties(gui_util PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
